@@ -1,0 +1,5 @@
+Manager.c:68:9:command_resolve	24	static
+Manager.c:239:6:Manager_init	4	static
+Manager.c:250:6:set_bit_STAREG	16	static
+Manager.c:269:6:clear_bit_STAREG	16	static
+Manager.c:282:6:update_system	16	static

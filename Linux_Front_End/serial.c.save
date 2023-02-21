@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <fcntl.h>  /* File Control Definitions          */
+#include <termios.h>/* POSIX Terminal Control Definitions*/
+#include <unistd.h> /* UNIX Standard Definitions         */
+#include <errno.h>  /* ERROR Number Definitions          */
+
+	struct termios
+	{
+		tcflag_t c_iflag; /* input mode flags   */
+		tcflag_t c_oflag; /* output mode flags  */
+		tcflag_t c_cflag; /* control mode flags */
+		tcflag_t c_lflag; /* local mode flags   */
+		cc_t c_line;      /* line discipline    */
+		cc_t c_cc[NCCS];  /* control characters */
+	};
+
+
+
+void main()
+{
+	struct termios SerialPortSettings;
+	int fd;
+ 	fd = open("/dev/ttyACM0",O_RDWR | O_NOCTTY);
+  	
+	if(fd == 1)
+     	printf("\n  Error! in Opening ttyUSB0\n");
+  	else
+     	printf("\n  ttyUSB0 Opened Successfully\n");
+
+
+	if(fd == 1)
+	{
+		tcgetattr(fd, &SerialPortSettings);
+
+		cfsetispeed(&SerialPortSettings,B115200);
+		cfsetospeed(&SerialPortSettings,B115200);
+
+		SerialPortSettings.c_cflag &= ~PARENB;   // No Parity
+		SerialPortSettings.c_cflag &= ~CSTOPB; //Stop bits = 1 
+		SerialPortSettings.c_cflag &= ~CSIZE; /* Clears the Mask       */
+		SerialPortSettings.c_cflag |=  CS8;   /* Set the data bits = 8 */
+		SerialPortSettings.c_cflag &= ~CRTSCTS; //hardware base flow control off
+		SerialPortSettings.c_cflag |= CREAD | CLOCAL; //turn on serial receiver
+		SerialPortSettings.c_iflag &= ~(IXON | IXOFF | IXANY); //software based flow control off
+		SerialPortSettings.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG); //Non Canonical Mode
+
+		//Apply changes on the terminos struct onto the peripheral
+		tcsetattr(fd,TCSANOW,&SerialPortSettings);
+		printf("Serial COM active\n");
+		printf("Serial Baud:%i \n",115200);
+	}
+
+	close(fd);
+}
+

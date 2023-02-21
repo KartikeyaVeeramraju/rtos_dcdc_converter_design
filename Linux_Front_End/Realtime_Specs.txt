@@ -1,0 +1,59 @@
+
+Interrupt Name		Period		Execution Time		Priority
+-------------------------------------------------------------------------
+ADC1			29.19 us	19.61 us		
+ADC2			35.6 us		19.60 us
+ADC3			167.1 ms	670 ns
+UART			10 ms		5.49 us
+EXT TRIG				10.24 us
+
+UART Health Check Stream total time of execution is 191 us
+
+
+However, the processor was found to settle at a much lower frequency of sampling when both the
+interrupts were activated. This leads to a re adjustment of the ADC1 and 
+ADC2's sampling rates. However, their execution tmes are expected to be the same.
+After adding data transfer of ADC values,
+
+Interrupt Name		Period		Execution Time		Phase				Utilization	
+----------------------------------------------------------------------------------------------------
+ADC1			51 us		19 us			26 us				37.2 %
+ADC2			51 us		19 us							37.2 %
+ADC3			167 ms		670 ns							4e-6 %
+UART			10 ms		889 us						
+-----
+UART_RXCPLT_Callback	10 ms		7 us							0.07 %
+Transmission Time	10 ms		880 us
+UART_TXCPLT_Callback	10 ms		1.820 us		880 us (wrt UART RXCPLT)	0.0182 %	
+-----
+EXT TRIG				10 us
+												--------------
+											Total = 74.488%
+
+Transmiion time is delegated by the UART peripheral and does not load the processor therefore the only tasks that load the 
+processor under the UART data streaming task
+Interpretation of the Utilization:
+-As net utilization is below a 100%, and EDF and possibly a Rate Monotonic Algorithm may be used for the application
+-If the tasks were RM schedulable, the UART interrupt must occur before a 10ms timeout interval on the pc, which implies that if the UART overshoots the 
+ 10 ms timeout zone, UART read fails
+-If a different prioritization algorithm is used whwrein the UART is given the highest priority, that ensures control over the system, time demand analysis may have to be used to ensue that all
+ the tasks are schedulable*  
+
+UART Interrput Details:
+As UART is not a periodic job, it is not possible to classify as a periodic job. However, it could be classified as one by considering it operation as
+a continuous data stream which reads the health data every period. And that way we can classify it as a priodic job.
+
+
+Notes from meeting with Dr.Z
+----------------------------
+1. If UART is failing, check utilization of all tasks and see if it sums up to greater than one
+2. URM threshold may not work but try time demand analysis with arbitary priority order
+3. Check the periods and execution times of each tasks and note those values down and then perform the time demand analysis
+
+
+What am I including in ADC1:
+Execution time is the time for execution time of the entire controller IIR filter and buffer update
+
+
+What am I including in ADC2:
+Execution time is the time for execution time of the entire controller IIR filter and buffer update

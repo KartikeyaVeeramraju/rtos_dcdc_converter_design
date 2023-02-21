@@ -1,0 +1,62 @@
+
+Comp3v3 =
+
+  4.4108e07 (s+1.132e04) (s+3.002e05)
+  -----------------------------------
+      s (s+1.206e07) (s+6.931e06)
+
+Name: C
+Continuous-time zero/pole/gain model.
+
+
+compz3v3 =
+
+  0.23291 (z-0.5038) (z+0.7949) (z+1)
+  -----------------------------------
+      (z-1) (z+0.9943) (z+0.9902)
+
+Sample time: 5.8309e-05 seconds
+Discrete-time zero/pole/gain model.
+
+Filter in delayed form for FIR implementation
+
+ans =
+
+  0.2329 + 0.3007 z^-1 - 0.02545 z^-2 - 0.09326 z^-3
+  --------------------------------------------------
+         1 + 0.9845 z^-1 - z^-2 - 0.9845 z^-3
+
+Sample time: 5.8309e-05 seconds
+Discrete-time transfer function.
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+Comp2v5 =
+
+  1.3411e07 (s+2.041e04) (s+1.657e05)
+  -----------------------------------
+      s (s+8.212e06) (s+1.878e06)
+
+Name: C
+Continuous-time zero/pole/gain model.
+
+
+compz2v5 =
+
+  0.27135 (z-0.2539) (z+0.657) (z+1)
+  ----------------------------------
+     (z-1) (z+0.9917) (z+0.9641)
+
+Sample time: 5.8309e-05 seconds
+Discrete-time zero/pole/gain model.
+
+Filter in delayed form for FIR implementation
+
+ans =
+
+  0.2714 + 0.3807 z^-1 + 0.06411 z^-2 - 0.04527 z^-3
+  --------------------------------------------------
+         1 + 0.9558 z^-1 - z^-2 - 0.9561 z^-3
+
+Sample time: 5.8309e-05 seconds
+Discrete-time transfer function.

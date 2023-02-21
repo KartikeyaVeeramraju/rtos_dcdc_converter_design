@@ -1,0 +1,48 @@
+close all;
+clc
+
+commandwindow
+
+
+L = L_design;
+R = Rmin;
+C = C_selected*N_caps;
+R_L = R_L+R_sense_min;
+Rc = ESR_Sel/N_caps;
+fsw = f;
+Tsamp = 1/fsw;
+
+nIpts = 3;
+nVpts = 3;
+
+%H = tf([C*Rc*R R],[L*C*(Rc+R) (L+C*Rc*R+C*R_L*(Rc+R)) R+R_L]);
+
+H = tf([Rc*C 1],[L*C (Rc+R_L)*C 1]);
+
+plant = H*Vin_max;
+
+%F_s = 83.33e+3; %from STM's ADC interrupt rate
+F_s = 77e+3;
+%sisotool(plant);
+
+%2v5 compensator manipulation
+
+% load('comps2v5.mat');
+%compz2v5 = c2d(C25_s_19, 1/F_s, 'tustin'); %This worked well before
+compz2v5 = c2d(Comp2v5_35k, 1/F_s, 'tustin');
+%C25_s_19
+Comp2v5_35k
+compz2v5
+[num2v5z,den2v5z] = tfdata(compz2v5,'v'); 
+fprintf('Filter in delayed form for FIR implemenattion\n');
+tf(num2v5z,den2v5z,1/F_s,'Variable','z^-1')
+  
+%3v3 compensator manipulation
+% load('comp3v350k.mat');
+% compz3v3 = c2d(Compensator3v3_50KHz, 1/F_s, 'tustin');
+% Compensator3v3_50KHz
+% compz3v3
+% [num3v3z,den3v3z] = tfdata(compz3v3,'v'); 
+% fprintf('Filter in delayed form for FIR implementation\n');
+% tf(num3v3z,den3v3z,1/F_s,'Variable','z^-1')
+
